@@ -25,6 +25,6 @@ class SongDetailController: UIViewController {
         
         songLabel.text = songDetail.name
         artistLabel.text = songDetail.artist
-        imageView.image = UIImage(contentsOfFile: "loveSongs")
+        imageView.image = UIImage(imageLiteralResourceName: "loveSongs")
     }
 }
