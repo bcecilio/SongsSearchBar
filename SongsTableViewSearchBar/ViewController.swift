@@ -13,19 +13,62 @@ class ViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
     
+    var songData = [Song]() {
+        didSet {
+            tableView.reloadData()
+        }
+    }
     
+    var searchQuery = "" {
+        didSet{
+            searchBarQuery()
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        
+        loadData()
+        tableView.dataSource = self
+        searchBar.delegate = self
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let SongDetailController = segue.destination as? SongDetailController, let indexPath = tableView.indexPathForSelectedRow else {
+            return
+        }
+        SongDetailController.songDetail = songData[indexPath.row]
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    func loadData() {
+        songData = Song.loveSongs
     }
-
-
+    
+    func searchBarQuery() {
+        songData = Song.loveSongs.filter {$0.name.lowercased().contains(searchQuery.lowercased())
+        }
+    }
 }
 
+extension ViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return songData.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "songCell", for: indexPath)
+        let songCell = songData[indexPath.row]
+        cell.textLabel?.text = songCell.name
+        return cell
+    }
+}
+
+extension ViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        guard !searchText.isEmpty else {
+                    searchBarQuery()
+                    loadData()
+                    return
+                }
+                searchQuery = searchText
+    }
+}

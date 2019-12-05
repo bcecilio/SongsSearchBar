@@ -10,13 +10,22 @@ import UIKit
 
 class SongDetailController: UIViewController {
     
-    @IBOutlet weak var imageVIew: UIImageView!
+    @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var songLabel: UILabel!
     @IBOutlet weak var artistLabel: UILabel!
    
-    
+    var songDetail: Song!
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        updateUI()
+    }
+    
+    func updateUI() {
+        guard let songInfo = songDetail else {
+            fatalError("HEHEHE")
+        }
+        songLabel.text = songInfo.name
+        artistLabel.text = songInfo.artist
     }
 }
