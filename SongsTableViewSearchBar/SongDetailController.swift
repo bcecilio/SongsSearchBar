@@ -22,10 +22,9 @@ class SongDetailController: UIViewController {
     }
     
     func updateUI() {
-        guard let songInfo = songDetail else {
-            fatalError("HEHEHE")
-        }
-        songLabel.text = songInfo.name
-        artistLabel.text = songInfo.artist
+        
+        songLabel.text = songDetail.name
+        artistLabel.text = songDetail.artist
+        imageView.image = UIImage(contentsOfFile: "loveSongs")
     }
 }
