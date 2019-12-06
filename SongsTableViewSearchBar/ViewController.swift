@@ -57,7 +57,8 @@ class ViewController: UIViewController {
         songData = Song.loveSongs
     }
     
-    func searchBarQuery() {
+    func searchBarQuery(for userSearch: String) {
+        guard !userSearch.isEmpty else { return }
         songData = Song.loveSongs.filter {$0.name.lowercased().contains(searchQuery.lowercased())
         }
     }
@@ -78,9 +79,12 @@ extension ViewController: UITableViewDataSource {
 }
 
 extension ViewController: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+    }
+    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         guard !searchText.isEmpty else {
-                    searchBarQuery()
                     loadData()
                     return
                 }
