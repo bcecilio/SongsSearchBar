@@ -8,6 +8,11 @@
 
 import UIKit
 
+enum SearchScope {
+    case name
+    case artist
+}
+
 class ViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
@@ -19,9 +24,18 @@ class ViewController: UIViewController {
         }
     }
     
+    var currentScope = SearchScope.name
+    
     var searchQuery = "" {
         didSet{
-            searchBarQuery()
+            switch currentScope {
+            case .name:
+                songData = Song.loveSongs.filter
+                    {$0.name.lowercased().contains(searchQuery.lowercased())}
+            case .artist:
+                songData = Song.loveSongs.filter
+                    {$0.artist.lowercased().contains(searchQuery.lowercased())}
+            }
         }
     }
 
@@ -58,6 +72,7 @@ extension ViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "songCell", for: indexPath)
         let songCell = songData[indexPath.row]
         cell.textLabel?.text = songCell.name
+        cell.detailTextLabel?.text = songCell.artist
         return cell
     }
 }
@@ -70,5 +85,16 @@ extension ViewController: UISearchBarDelegate {
                     return
                 }
                 searchQuery = searchText
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
+        switch selectedScope {
+        case 0:
+            currentScope = .name
+        case 1:
+            currentScope = .artist
+        default:
+            print("yea right lol")
+        }
     }
 }
